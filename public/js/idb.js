@@ -31,7 +31,7 @@ function uploadBudget() {
     const budgetObjectStore = transaction.objectStore('new_budget');
     const getAll = budgetObjectStore.getAll();
 
-    getAll.onsuccess = function () {
+    getAll.onsuccess = function() {
         if (getAll.result.length > 0) {
             fetch('/api/transaction', {
                 method: 'POST',
@@ -42,10 +42,13 @@ function uploadBudget() {
                 }
             })
                 .then(response => response.json())
-                .then(() => {
-                    const transaction = db.transaction(['new_budget'], 'readwrite');
-                    const budgetObjectStore = transaction.objectStore('new_budget');
-                    budgetObjectStore.clear();
+                .then(serverResponse => {
+                    if (serverResponse.message) {
+                        throw new Error(serverResponse);
+                    }
+                    const transaction = db.transaction(['new_entry'], 'readwrite');
+                    const entryObjectStore = transaction.objectStore('new_entry');
+                    entryObjectStore.clear();
 
                     alert('All saved transactions have been submitted!');
                 })

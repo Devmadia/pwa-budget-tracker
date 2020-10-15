@@ -7,16 +7,16 @@ request.onupgradeneeded = function (event) {
     db.createObjectStore('new_budget', { autoIncrement: true });
 };
 
-request.onerror = function (event) {
-    console.log(event.target.errorCode);
-};
-
 request.onsuccess = function (event) {
     db = event.target.result;
 
     if (navigator.onLine) {
         uploadBudget();
     }
+};
+
+request.onerror = function (event) {
+    console.log(event.target.errorCode);
 };
 
 // User creates a transaction while offline.
@@ -33,7 +33,7 @@ function uploadBudget() {
 
     getAll.onsuccess = function () {
         if (getAll.result.length > 0) {
-            fetch('/api/transaction/bulk', {
+            fetch('/api/transaction', {
                 method: 'POST',
                 body: JSON.stringify(getAll.result),
                 headers: {
@@ -46,6 +46,8 @@ function uploadBudget() {
                     const transaction = db.transaction(['new_budget'], 'readwrite');
                     const budgetObjectStore = transaction.objectStore('new_budget');
                     budgetObjectStore.clear();
+
+                    alert('All saved transactions have been submitted!');
                 })
                 .catch(err => {
                     console.log(err);

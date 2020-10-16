@@ -1,11 +1,9 @@
 let transactions = [];
 let myChart;
 
-fetch("/api/transaction")
-  .then(response => {
+fetch("/api/transaction").then(response => {
     return response.json();
-  })
-  .then(data => {
+  }).then(data => {
     // save db data on global variable
     transactions = data;
 
@@ -120,7 +118,7 @@ function sendTransaction(isAdding) {
       Accept: "application/json, text/plain, */*",
       "Content-Type": "application/json"
     }
-  })
+  }) 
   .then(response => {    
     return response.json();
   })

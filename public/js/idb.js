@@ -46,8 +46,8 @@ function uploadBudget() {
                     if (serverResponse.message) {
                         throw new Error(serverResponse);
                     }
-                    const transaction = db.transaction(['new_entry'], 'readwrite');
-                    const entryObjectStore = transaction.objectStore('new_entry');
+                    const transaction = db.transaction(['new_budget'], 'readwrite');
+                    const entryObjectStore = transaction.objectStore('new_budget');
                     entryObjectStore.clear();
 
                     alert('All saved transactions have been submitted!');

@@ -31,9 +31,9 @@ function uploadBudget() {
     const budgetObjectStore = transaction.objectStore('new_budget');
     const getAll = budgetObjectStore.getAll();
 
-    getAll.onsuccess = function() {
+    getAll.onsuccess = function () {
         if (getAll.result.length > 0) {
-            fetch('/api/transaction', {
+            fetch('/api/transaction/bulk', {
                 method: 'POST',
                 body: JSON.stringify(getAll.result),
                 headers: {
@@ -42,15 +42,10 @@ function uploadBudget() {
                 }
             })
                 .then(response => response.json())
-                .then(serverResponse => {
-                    if (serverResponse.message) {
-                        throw new Error(serverResponse);
-                    }
+                .then(() => {
                     const transaction = db.transaction(['new_budget'], 'readwrite');
-                    const entryObjectStore = transaction.objectStore('new_budget');
-                    entryObjectStore.clear();
-
-                    alert('All saved transactions have been submitted!');
+                    const budgetObjectStore = transaction.objectStore('new_budget');
+                    budgetObjectStore.clear();
                 })
                 .catch(err => {
                     console.log(err);
@@ -59,4 +54,5 @@ function uploadBudget() {
     };
 }
 
+// listen for app coming back online
 window.addEventListener('online', uploadBudget);
